@@ -28,7 +28,7 @@ def ind():
 
 	for i,j in indexes.iterrows():
 		# % を除去
-		indexes.at[i, "TOPIXに占める個別銘柄のウェイト"] = indexes.loc[i, "TOPIXに占める個別銘柄のウェイト"].replace("%", "")
+		indexes.at[i, "TOPIXに占める個別銘柄のウェイト"] = indexes.loc[i, "TOPIXに占める個別銘柄のウェイト"]
 	return [indexes_code, indexes]
 
 
@@ -46,18 +46,16 @@ def rss(item, k):
 	# ddeを取得、格納、ウエイトをかけて計算
 	
 	for i,j in enumerate(indexes_code, start = k): 
-		if i >= 2182:
-			#print(count)
-			break
 		count += 1
 		
 		if k==2142 and count == 24:
 			continue
 		w = indexes["TOPIXに占める個別銘柄のウェイト"][i]
+		"""
 		if float(w) <= 0.001:
 			count -= 1
 			continue
-
+		"""
 		try:
 			dde = DDEClient("rss", indexes_code[i])
 		except Exception:
@@ -86,12 +84,10 @@ def rss(item, k):
 			if val == ' ':
 				continue
 			
-			calc += float(val) * float(w)* 0.01
+			calc += float(val) * float(w)
 			weights.append(w)
-			if i >= 2182:
-				print(count)
 			if count >= 126:
-				print(i)
+				#print(i)
 				break
 			if k ==2142 and (count >= 39):
 				break
@@ -130,7 +126,7 @@ def rss2(item, dde_ware, weights):
 					temp = 0
 				with open('error.log', 'a') as f:
 					try:
-						calc += float(temp) * float(weights[i] )* 0.01
+						calc += float(temp) * float(weights[i] )
 					except:
 						traceback.print_exc(file=f)
 				break
